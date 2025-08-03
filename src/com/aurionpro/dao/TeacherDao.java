@@ -76,7 +76,7 @@ public class TeacherDao {
 			preparedStatement.setString(3, teacher.getLastName());
 			preparedStatement.setString(4, teacher.getMobileNo());
 			preparedStatement.setString(5, teacher.getEmailId());
-			preparedStatement.setBoolean(6, teacher.is_active());
+			preparedStatement.setBoolean(6, teacher.isActive());
 			preparedStatement.executeUpdate();
 			preparedStatement = connection.prepareStatement("INSERT INTO TEACHER_PROFILE VALUES (?,?,?,?,?)");
 			preparedStatement.setInt(1, teacherProfile.getTeacherId());

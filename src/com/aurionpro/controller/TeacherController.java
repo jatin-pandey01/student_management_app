@@ -46,6 +46,12 @@ public class TeacherController {
 				scanner.nextLine();
 				continue;
 			}
+			
+			if(choice == 0) {
+				System.out.println("***** Teacher Exit *****");
+				break;
+			}
+			
 			switch (choice) {
 			case 1:
 				handleShowAllTeachers();
@@ -167,12 +173,6 @@ public class TeacherController {
 			case 8:
 				handleShowAllTeacherProfiles();
 				break;
-			
-
-			case 0:
-				System.out.println("Exiting program. Goodbye!");
-				scanner.close();
-				System.exit(0);
 
 			default:
 				System.out.println("Invalid choice.");
