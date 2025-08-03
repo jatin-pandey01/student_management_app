@@ -95,6 +95,7 @@ public class CourseDao {
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
+			System.out.println(e.getLocalizedMessage());
 		}
 		return courses;
 	}
