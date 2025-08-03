@@ -2,17 +2,20 @@ package com.aurionpro.controller;
 
 import java.util.Scanner;
 
-import com.aurionpro.dao.FeeDao;
+import com.aurionpro.service.FeesService;
 
 public class FeesController {
-	private FeeDao feeDao = null;
-	private Scanner scanner = new Scanner(System.in);
+	private static FeesService feeService = null;
+	private static Scanner scanner = new Scanner(System.in);
 	
-	public FeesController() {
-		feeDao = new FeeDao();
+	static {
+		feeService = new FeesService();
 	}
 	
-	public void display() {
+	public FeesController() {
+	}
+	
+	public static void display() {
 		while(true) {
 			try {
 				System.out.println("\n\n1. View Total Paid Fees \n2. View Total Pending Fees \n3. View Fees By Student"
@@ -30,26 +33,26 @@ public class FeesController {
 				}
 				
 				switch(input) {
-				case 1: feeDao.paidFees();
+				case 1: feeService.paidFees();
 						break;
-				case 2: feeDao.pendingFees();
+				case 2: feeService.pendingFees();
 						break;
 				case 3: System.out.println("Enter student id : ");
 						int studentId = scanner.nextInt();
-						feeDao.feeByStudentId(studentId);
+						feeService.feeByStudentId(studentId);
 						break;
 				case 4: System.out.println("Enter course id : ");
 						int courseId = scanner.nextInt();
-						feeDao.feeByCourseId(courseId);
+						feeService.feeByCourseId(courseId);
 						break;
 				case 5: System.out.println("Enter course id : ");
 						courseId = scanner.nextInt();
 						System.out.println("Enter new fee of course : ");
 						double courseFee = scanner.nextDouble();
 						
-						feeDao.updateFeeOfCourse(courseId, courseFee);
+						feeService.updateFeeOfCourse(courseId, courseFee);
 						break;
-				case 6: feeDao.totalEarning();
+				case 6: feeService.totalEarning();
 						break;
 				}
 				

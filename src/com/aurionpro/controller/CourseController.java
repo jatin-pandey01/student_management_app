@@ -4,20 +4,23 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Scanner;
 
-import com.aurionpro.dao.CourseDao;
 import com.aurionpro.model.Course;
 import com.aurionpro.model.Subject;
+import com.aurionpro.service.CourseService;
 
 public class CourseController {
-	private Scanner scanner = new Scanner(System.in);
-	private CourseDao courseDao;
-	private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+	private static Scanner scanner = new Scanner(System.in);
+	private static CourseService courseService;
+	private static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 	
-	public CourseController() {
-		this.courseDao = new CourseDao();
+	static {
+		courseService = new CourseService();
 	}
 	
-	public void display() {
+	public CourseController() {
+	}
+	
+	public static void display() {
 		try {
 			while(true) {
 				System.out.println("\n\n1. View all courses \n2. View all subjects \n3. Add new course \n4. Add new subject "
@@ -30,9 +33,9 @@ public class CourseController {
 				if(userInput == 10) break;
 				
 				switch(userInput) {
-					case 1 : courseDao.showAllCourses();
+					case 1 : courseService.showAllCourses();
 							break;
-					case 2 : courseDao.showAllSubjects();
+					case 2 : courseService.showAllSubjects();
 							break;
 					case 3 : System.out.println("\n\nEnter course id : ");
 							int courseId = scanner.nextInt();
@@ -41,27 +44,27 @@ public class CourseController {
 							System.out.println("\nEnter course fee : ");
 							double courseFee = scanner.nextDouble();
 							Course course = new Course(courseId, courseName,courseFee);
-							courseDao.addCourse(course);
+							courseService.addCourse(course);
 							break;
 					case 4 : System.out.println("\n\nEnter subject id : ");
 							int subjectId = scanner.nextInt();
 							System.out.println("\nEnter subject name : ");
 							String subjectName = reader.readLine();
-							courseDao.addSubject(new Subject(subjectId,subjectName));
+							courseService.addSubject(new Subject(subjectId,subjectName));
 							break;
 					case 5 : System.out.println("\n\nEnter course id : ");
 							courseId = scanner.nextInt();
 							System.out.println("\nEnter subject id : ");
 							subjectId = scanner.nextInt();
-							courseDao.addSubjectIntoCourse(courseId, subjectId);;
+							courseService.addSubjectIntoCourse(courseId, subjectId);;
 							break;
 					case 6 : System.out.println("\n\nEnter course id : ");
 							courseId = scanner.nextInt();
-							courseDao.showAllSubjectsOfCourse(courseId);
+							courseService.showAllSubjectsOfCourse(courseId);
 							break;
 					case 7 : System.out.println("\n\nEnter course id : ");
 							courseId = scanner.nextInt();
-							if(courseDao.checkIfCourseExist(courseId)) {
+							if(courseService.checkIfCourseExist(courseId)) {
 								System.out.println("\nCongrats !!!!! It exist.");
 							}
 							else {
@@ -70,7 +73,7 @@ public class CourseController {
 							break;
 					case 8 : System.out.println("\n\nEnter course name : ");
 							courseName = reader.readLine();
-							if(courseDao.checkIfCourseExist(courseName)) {
+							if(courseService.checkIfCourseExist(courseName)) {
 								System.out.println("\nCongrats !!!!! It exist.");
 							}
 							else {
@@ -79,7 +82,7 @@ public class CourseController {
 							break;
 					case 9 : System.out.println("\n\nEnter course id : ");
 							courseId = scanner.nextInt();
-							courseDao.deleteCourse(courseId);
+							courseService.deleteCourse(courseId);
 							break;
 				}
 			}

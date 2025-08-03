@@ -88,8 +88,6 @@ public class CourseDao {
 			while(resultSet.next()) {
 				System.out.printf("%-10s %-50s %-10s %b\n",resultSet.getInt("course_id"),
 						resultSet.getString("course_name"),resultSet.getDouble("course_fee"),resultSet.getBoolean("is_active"));
-//				System.out.println(resultSet.getInt("course_id") + "\t" + resultSet.getString("course_name") + "\t" + 
-//								resultSet.getDouble("course_fee"));
 				courses.add(new Course(resultSet.getInt(1), resultSet.getString(2), resultSet.getDouble(3)));
 			}
 			

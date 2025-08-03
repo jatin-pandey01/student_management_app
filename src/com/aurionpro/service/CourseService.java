@@ -35,12 +35,12 @@ public class CourseService {
 		courseDao.showAllSubjectsOfCourse(courseId);
 	}
 	
-	public void checkIfCourseExist(int courseId) {
-		courseDao.checkIfCourseExist(courseId);
+	public boolean checkIfCourseExist(int courseId) {
+		return courseDao.checkIfCourseExist(courseId);
 	}
 	
-	public void checkIfCourseExist(String courseName) {
-		courseDao.checkIfCourseExist(courseName);
+	public boolean checkIfCourseExist(String courseName) {
+		return courseDao.checkIfCourseExist(courseName);
 	}
 	
 	public void deleteCourse(int courseId) {
