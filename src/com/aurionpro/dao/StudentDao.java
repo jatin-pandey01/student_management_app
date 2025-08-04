@@ -1,7 +1,7 @@
-
 package com.aurionpro.dao;
 
 import java.sql.Connection;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,7 +11,7 @@ import java.util.List;
 import com.aurionpro.database.Database;
 import com.aurionpro.model.Student;
 import com.aurionpro.model.StudentProfile;
-import com.aurionpro.model.StudentProfile.StudentGender;
+import com.aurionpro.model.StudentGender;
 
 public class StudentDao {
 
@@ -49,23 +49,23 @@ public class StudentDao {
 		}
 		return false;
 	}
-	
-	//For Validation
+
+	// For Validation
 	public boolean checkStudentDeactive(int studentID) {
 		try {
-			PreparedStatement ps = connection.prepareStatement("SELECT EXISTS (SELECT student_id FROM students WHERE student_id = ? and is_Active=0)");
+			PreparedStatement ps = connection.prepareStatement(
+					"SELECT EXISTS (SELECT student_id FROM students WHERE student_id = ? and is_Active=0)");
 			ps.setInt(1, studentID);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next() && rs.getBoolean(1)) {
-			    // Record exists
-				
+				System.out.println("Student is deactivated");
+
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return false;
 	}
-	
 
 	public boolean addStudent(Student student) {
 		try {
@@ -95,11 +95,11 @@ public class StudentDao {
 			preparedStatement.setString(4, studentprofile.getStudentEmail());
 			preparedStatement.setString(5, studentprofile.getStudentGender().name());
 			preparedStatement.setInt(6, student.getStudentID());
-			preparedStatement.executeUpdate();
+
 			return preparedStatement.executeUpdate() > 0;
+
 		} catch (SQLException e) {
-			System.out.println("9999");
-			e.printStackTrace();
+			System.out.println("Error while adding student profile: " + e.getMessage());
 		}
 		return false;
 	}
@@ -121,7 +121,7 @@ public class StudentDao {
 				student.setStudentMobno(resultSet.getString("student_mobno"));
 				student.setActive(resultSet.getBoolean("is_Active")); // Don't forget this line
 
-				students.add(student); 
+				students.add(student);
 			}
 
 //			System.out.println(students); 
@@ -160,7 +160,7 @@ public class StudentDao {
 	public List<StudentProfile> showActiveStudentsProfile() {
 
 		List<StudentProfile> studentprofiles = new ArrayList<>();
-		String query = "select * from students_profile where student_id in (select student_id from students where is_Active=true);";
+		String query = "select * from students_profile where student_id in (select student_id from students where is_Active=true)";
 		try {
 			preparedStatement = connection.prepareStatement(query);
 			resultSet = preparedStatement.executeQuery();
@@ -174,20 +174,18 @@ public class StudentDao {
 				studentprofile.setStudentEmail(resultSet.getString("student_email"));
 				studentprofile.setStudentID(resultSet.getInt("student_id"));
 				studentprofiles.add(studentprofile);
-				
+
 				String genderStr = resultSet.getString("student_gender");
 				if (genderStr != null) {
 					studentprofile.setStudentGender(StudentGender.valueOf(genderStr)); // If gender is stored as a
-													// string
+																						// string
 				}
-//				studentprofile.setStudentGender(StudentGender.valueOf(genderStr));
 			}
 
 		} catch (SQLException e) {
-			
+
 			e.printStackTrace();
 		}
-//		System.out.println(studentprofiles);
 		return studentprofiles;
 
 	}
@@ -209,7 +207,7 @@ public class StudentDao {
 				studentprofile.setStudentEmail(resultSet.getString("student_email"));
 				studentprofile.setStudentID(resultSet.getInt("student_id"));
 				studentprofiles.add(studentprofile);
-				
+
 				String genderStr = resultSet.getString("student_gender");
 				if (genderStr != null) {
 					studentprofile.setStudentGender(StudentGender.valueOf(genderStr)); // If gender is stored as a
@@ -218,7 +216,7 @@ public class StudentDao {
 			}
 
 		} catch (SQLException e) {
-		
+
 			e.printStackTrace();
 		}
 //		System.out.println(studentprofiles);
@@ -226,21 +224,20 @@ public class StudentDao {
 
 	}
 
-
-	public void readAStudent(int studentID) {	
+	public void readAStudent(int studentID) {
 		try {
-		preparedStatement = connection.prepareStatement("SELECT * FROM students WHERE student_id = ?");
+			preparedStatement = connection.prepareStatement("SELECT * FROM students WHERE student_id = ?");
 
-		preparedStatement.setInt(1, studentID);
-		ResultSet rs = preparedStatement.executeQuery();
+			preparedStatement.setInt(1, studentID);
+			ResultSet rs = preparedStatement.executeQuery();
 
-		if (rs.next()) {
-			Student student = new Student(rs.getInt("student_id"), rs.getInt("student_rollno"),
-					rs.getString("student_fname"), rs.getString("student_lname"), rs.getString("student_mobno"),
-					rs.getBoolean("is_Active"));
+			if (rs.next()) {
+				Student student = new Student(rs.getInt("student_id"), rs.getInt("student_rollno"),
+						rs.getString("student_fname"), rs.getString("student_lname"), rs.getString("student_mobno"),
+						rs.getBoolean("is_Active"));
 //			System.out.println(student);
-		}
-		} catch(SQLException e) {
+			}
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
@@ -336,7 +333,9 @@ public class StudentDao {
 			preparedStatement.setInt(1, studentprofile.getStudentAge());
 			preparedStatement.setInt(2, studentprofile.getProfileID());
 
-			preparedStatement.executeUpdate();
+			int rowsUpdated = preparedStatement.executeUpdate();
+			System.out.println(rowsUpdated + " student(s) updated.");
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -375,54 +374,71 @@ public class StudentDao {
 
 	}
 
-	public StudentProfile getStudentProfileById(int profileId){
+	public StudentProfile getStudentProfileById(int profileId) {
 		try {
-		StudentProfile profile = null;
+			StudentProfile profile = null;
 
-		String query = "SELECT * FROM students_profile WHERE profile_id = ?";
-		preparedStatement = connection.prepareStatement(query);
-		preparedStatement.setInt(1, profileId);
-		resultSet = preparedStatement.executeQuery();
+			String query = "SELECT * FROM students_profile WHERE profile_id = ?";
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setInt(1, profileId);
+			resultSet = preparedStatement.executeQuery();
 
-		if (resultSet.next()) {
-			// Safely parse gender string to match enum (e.g., "female" -> "Female")
-			String genderStr = resultSet.getString("student_gender");
-			StudentGender gender = StudentGender.Other; // default fallback
+			if (resultSet.next()) {
+				// Safely parse gender string to match enum (e.g., "female" -> "Female")
+				String genderStr = resultSet.getString("student_gender");
+				StudentGender gender = StudentGender.Other; // default fallback
 
-			try {
-				genderStr = genderStr.substring(0, 1).toUpperCase() + genderStr.substring(1).toLowerCase();
-				gender = StudentGender.valueOf(genderStr);
-			} catch (Exception e) {
-				System.out.println("⚠️ Invalid gender format found in DB. Defaulting to 'Other'.");
+				try {
+					genderStr = genderStr.substring(0, 1).toUpperCase() + genderStr.substring(1).toLowerCase();
+					gender = StudentGender.valueOf(genderStr);
+				} catch (Exception e) {
+					System.out.println("⚠️ Invalid gender format found in DB. Defaulting to 'Other'.");
+				}
+
+				profile = new StudentProfile(resultSet.getInt("profile_id"), resultSet.getString("student_address"),
+						resultSet.getInt("student_age"), resultSet.getString("student_email"), gender,
+						resultSet.getInt("student_id"));
 			}
 
-			profile = new StudentProfile(resultSet.getInt("profile_id"), resultSet.getString("student_address"),
-					resultSet.getInt("student_age"), resultSet.getString("student_email"), gender,
-					resultSet.getInt("student_id"));
-		}
-
-		return profile;
-		} catch(SQLException e) {
+			return profile;
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 
-	public void deleteStudentById(int studentId){
+	public void deleteStudentById(int studentId) {
 		String query = "UPDATE students SET is_Active = false WHERE student_id = ?";
 
 		try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 			preparedStatement.setInt(1, studentId);
 
 			int rowsUpdated = preparedStatement.executeUpdate();
+			System.out.println("Rows updated: " + rowsUpdated);
 			if (rowsUpdated > 0) {
 				System.out.println(" Student with ID " + studentId + " was deactivated (soft deleted).");
-			} else {
+			}
+			if (!(rowsUpdated > 0)) {
 				System.out.println(" No student found with ID: " + studentId);
 			}
-		} catch(SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public boolean checkIfDeleted(int studentId) {
+		String query = "SELECT student_id from students where is_Active=0 and student_id=?";
+		try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+	        preparedStatement.setInt(1, studentId);
+	        try (ResultSet resultSet = preparedStatement.executeQuery()) {
+	            return resultSet.next(); // if a row exists, student is soft-deleted
+	        }
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+		
 	}
 
 	public void assignCourseToStudent(int studentId, int courseId) {
@@ -437,48 +453,47 @@ public class StudentDao {
 			} else {
 				System.out.println(" Course assignment failed.");
 			}
-		} catch(SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
 	public List<Student> ShowAssignedCourses() {
 		try {
-		List<Student> studentcourses = new ArrayList<>();
-		String query = """
-				    SELECT
-				        s.student_id,
-				        s.student_rollno,
-				        s.student_fname,
-				        s.student_lname,
-				        GROUP_CONCAT(c.course_name SEPARATOR ', ') AS course_names
-				    FROM
-				        students s
-				    JOIN
-				        student_course sc ON s.student_id = sc.student_id
-				    JOIN
-				        courses c ON sc.course_id = c.course_id
-				    GROUP BY
-				        s.student_id, s.student_rollno, s.student_fname, s.student_lname
-				""";
+			List<Student> studentcourses = new ArrayList<>();
+			String query = """
+					    SELECT
+					        s.student_id,
+					        s.student_rollno,
+					        s.student_fname,
+					        s.student_lname,
+					        GROUP_CONCAT(c.course_name SEPARATOR ', ') AS course_names
+					    FROM
+					        students s
+					    JOIN
+					        student_course sc ON s.student_id = sc.student_id
+					    JOIN
+					        courses c ON sc.course_id = c.course_id
+					    GROUP BY
+					        s.student_id, s.student_rollno, s.student_fname, s.student_lname
+					""";
 
-		preparedStatement = connection.prepareStatement(query);
-		resultSet = preparedStatement.executeQuery();
+			preparedStatement = connection.prepareStatement(query);
+			resultSet = preparedStatement.executeQuery();
 
-		while (resultSet.next()) {
-			Student info = new Student();
-			info.setStudentID(resultSet.getInt("student_id"));
-			info.setStudentRollno(resultSet.getInt("student_rollno"));
-			info.setStudentFname(resultSet.getString("student_fname"));
-			info.setStudentLname(resultSet.getString("student_lname"));
-			info.setCourseNames(resultSet.getString("course_names")); // Use of added field
+			while (resultSet.next()) {
+				Student info = new Student();
+				info.setStudentID(resultSet.getInt("student_id"));
+				info.setStudentRollno(resultSet.getInt("student_rollno"));
+				info.setStudentFname(resultSet.getString("student_fname"));
+				info.setStudentLname(resultSet.getString("student_lname"));
+				info.setCourseNames(resultSet.getString("course_names")); // Use of added field
 
-			studentcourses.add(info);
-		}
+				studentcourses.add(info);
+			}
 
-		System.out.println(studentcourses); // Print list
-		return studentcourses;
-		} catch(SQLException e) {
+			return studentcourses;
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;

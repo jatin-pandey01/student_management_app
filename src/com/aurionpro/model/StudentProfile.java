@@ -1,15 +1,14 @@
 
 package com.aurionpro.model;
+import java.util.*;
+import java.lang.*;
 
 public class StudentProfile {
 	
+	public static Object StudentGender;
 	private int profileID;
 	private String studentAddress;
 	private int studentAge;
-	
-	public enum StudentGender{
-		Female, Male, Other
-	}
 	
 	private StudentGender studentGender;
 	
@@ -79,7 +78,6 @@ public class StudentProfile {
 
 	public StudentProfile() {
 		super();
-		// TODO Auto-generated constructor stub
 	}	
 	
 }

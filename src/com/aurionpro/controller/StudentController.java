@@ -1,11 +1,13 @@
 package com.aurionpro.controller;
 
+import java.sql.SQLException;	
+
 import java.util.List;
 import java.util.Scanner;
 
 import com.aurionpro.model.Student;
 import com.aurionpro.model.StudentProfile;
-import com.aurionpro.model.StudentProfile.StudentGender;
+import com.aurionpro.model.StudentGender;
 import com.aurionpro.service.StudentService;
 
 public class StudentController {
@@ -229,68 +231,81 @@ public class StudentController {
 	}
 
 	private static void updateProfileDetails() {
-		try {
-			System.out.print("\n Enter Profile ID to update: ");
-			int profileid = scanner.nextInt();
-			scanner.nextLine();
+	    try {
+	        System.out.print("\n Enter Profile ID to update: ");
+	        int profileid = scanner.nextInt();
+	        scanner.nextLine();
 
-			StudentProfile profile = new StudentProfile();
-			profile.setStudentID(profileid);
+	        StudentProfile profile = new StudentProfile();
+	        profile.setProfileID(profileid);
 
-			System.out.println("\n Update Profile Details:");
-			System.out.println("1. Address");
-			System.out.println("2. Age");
-			System.out.println("3. Gender");
-			System.out.println("4. Email");
-			System.out.print("👉 Choice: ");
-			int choice = scanner.nextInt();
-			scanner.nextLine();
+	        System.out.println("\n Update Profile Details:");
+	        System.out.println("1. Address");
+	        System.out.println("2. Age");
+	        System.out.println("3. Gender");
+	        System.out.println("4. Email");
+	        System.out.print("👉 Choice: ");
+	        int choice = scanner.nextInt();
+	        scanner.nextLine();
 
-			switch (choice) {
-				case 1 -> {
-					System.out.print("Enter new Address: ");
-					profile.setStudentAddress(scanner.nextLine());
-					service.updateStudentAddress(profile);
-				}
-				case 2 -> {
-					System.out.print("Enter new Age: ");
-					profile.setStudentAge(scanner.nextInt());
-					service.isValidAge(profile.getStudentAge()); //validation
-					service.updateStudentAge(profile);
-				}
-				case 3 -> {
-					System.out.print("Enter new Gender (Male/Female/Other): ");
-					String inputGender = scanner.nextLine().toUpperCase();
-					try {
-						profile.setStudentGender(studentGender.valueOf(inputGender));
-						service.getValidGender(inputGender); //validation
-						service.updateStudentGender(profile);
-					} catch (IllegalArgumentException e) {
-						System.out.println(" Invalid gender entered.");
-					}
-				}
-				case 4 -> {
-					System.out.print("Enter new Email: ");
-					profile.setStudentEmail(scanner.nextLine());
-					service.isValidEmail(profile.getStudentEmail()); //validation
-					service.updateStudentEmail(profile);
-				}
-				default -> System.out.println(" Invalid choice.");
-			}
+	        switch (choice) {
+	            case 1 -> {
+	                System.out.print("Enter new Address: ");
+	                profile.setStudentAddress(scanner.nextLine());
+	                service.updateStudentAddress(profile);
+	            }
+	            case 2 -> {
+	                System.out.print("Enter new Age: ");
+	                int newAge = scanner.nextInt();
+	                scanner.nextLine(); // consume newline
+	                if (service.isValidAge(newAge)) {
+	                    profile.setStudentAge(newAge);
+	                    service.updateStudentAge(profile);
+	                } else {
+	                    System.out.println("❌ Invalid age entered.");
+	                }
+	            }
+	            case 3 -> {
+	                while (true) {
+	                    System.out.print("Enter new Gender (Male/Female/Other): ");
+	                    String inputGender = scanner.nextLine();
+	                    StudentGender validGender = service.getValidGender(inputGender);
+	                    if (validGender != null) {
+	                        profile.setStudentGender(validGender);
+	                        service.updateStudentGender(profile);
+	                        break;
+	                    } else {
+	                        System.out.println("❌ Invalid gender. Try again.");
+	                    }
+	                }
+	            }
+	            case 4 -> {
+	                System.out.print("Enter new Email: ");
+	                String newEmail = scanner.nextLine();
+	                if (service.isValidEmail(newEmail)) {
+	                    profile.setStudentEmail(newEmail);
+	                    service.updateStudentEmail(profile);
+	                } else {
+	                    System.out.println("❌ Invalid email format.");
+	                }
+	            }
+	            default -> System.out.println("❌ Invalid choice.");
+	        }
 
-			System.out.println(" Update completed.");
-		} catch (IllegalArgumentException e) {
-			System.out.println(" Failed to update profile.");
-			e.printStackTrace();
-		}
+	        System.out.println("✅ Update completed.");
+	    } catch (IllegalArgumentException e) {
+	        System.out.println("❌ Failed to update profile.");
+	        e.printStackTrace();
+	    }
 	}
+
 
 	private static void deleteStudent() {
 		try {
 			System.out.print("\n Enter Student ID to deactivate: ");
 			int id = scanner.nextInt();
 			scanner.nextLine();
-			service.deleteStudent(id); //validation used
+			service.deleteAStudent(id); //validation used
 			
 		} catch (IllegalArgumentException e) {
 			System.out.println(" Failed to deactivate student.");

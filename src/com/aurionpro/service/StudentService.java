@@ -2,12 +2,13 @@
 package com.aurionpro.service;
 
 import java.sql.SQLException;
+
 import java.util.List;
 
 import com.aurionpro.dao.StudentDao;
 import com.aurionpro.model.Student;
 import com.aurionpro.model.StudentProfile;
-import com.aurionpro.model.StudentProfile.studentGender;
+import com.aurionpro.model.StudentGender;
 
 public class StudentService {
 
@@ -114,36 +115,35 @@ public class StudentService {
 	}
 
 	// Validate Gender Input
-	public studentGender getValidGender(String genderStr) {
+	public StudentGender getValidGender(String genderStr) {
 		System.out.println(genderStr);
-	    try {
-	        if (genderStr == null || genderStr.isBlank()) {
-	            System.out.println("❌ Gender input cannot be empty.");
-	            return null;
-	        }
+		try {
+			if (genderStr == null || genderStr.isBlank()) {
+				System.out.println("❌ Gender input cannot be empty.");
+				return null;
+			}
 
-	       
-	        String output = genderStr.substring(0, 1).toUpperCase() + genderStr.substring(1);
-	        return StudentProfile.studentGender.valueOf(output);
-	    } catch (Exception e) {
-	        System.out.println("Invalid gender. Please enter Male, Female, or Other.");
-	    	 return null;
-	    }
-	    
+			String output = genderStr.substring(0, 1).toUpperCase() + genderStr.substring(1);
+			return ((StudentGender) StudentProfile.StudentGender).valueOf(output);
+		} catch (Exception e) {
+			System.out.println("Invalid gender. Please enter Male, Female, or Other.");
+			return null;
+		}
+
 	}
 
-
 	// Soft delete (deactivate) student
-	public void deleteStudent(int studentId) {
+	public void deleteAStudent(int studentId) {
 		try {
 			// to see if the student is already deactivated
-			if (!studentDao.checkStudentDeactive(studentId)) {
-				System.out.println("Student is already deactivated");
+
+			if (studentDao.checkIfDeleted(studentId)) {
+				System.out.println("Student is already not active");
 			}
-			if (studentDao.checkStudentDeactive(studentId)) {
+			if(!(studentDao.checkIfDeleted(studentId))) {
 				studentDao.deleteStudentById(studentId);
-				System.out.println(" Student deactivated successfully.");
 			}
+			
 
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
