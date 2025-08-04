@@ -100,7 +100,7 @@ public class FeeDao {
 			return;
 		}
 		try {
-			preparedStatement = connection.prepareStatement("update course set course_fee = ? where course_id = ?");
+			preparedStatement = connection.prepareStatement("update courses set course_fee = ? where course_id = ?");
 			preparedStatement.setDouble(1, fee);
 			preparedStatement.setInt(2, courseId);
 			int updates = preparedStatement.executeUpdate();

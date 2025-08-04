@@ -11,7 +11,7 @@ import java.util.List;
 import com.aurionpro.database.Database;
 import com.aurionpro.model.Student;
 import com.aurionpro.model.StudentProfile;
-import com.aurionpro.model.StudentProfile.studentGender;
+import com.aurionpro.model.StudentProfile.StudentGender;
 
 public class StudentDao {
 
@@ -177,9 +177,10 @@ public class StudentDao {
 				
 				String genderStr = resultSet.getString("student_gender");
 				if (genderStr != null) {
-					studentprofile.setStudentGender(studentGender.valueOf(genderStr)); // If gender is stored as a
-																						// string
+					studentprofile.setStudentGender(StudentGender.valueOf(genderStr)); // If gender is stored as a
+													// string
 				}
+//				studentprofile.setStudentGender(StudentGender.valueOf(genderStr));
 			}
 
 		} catch (SQLException e) {
@@ -211,7 +212,7 @@ public class StudentDao {
 				
 				String genderStr = resultSet.getString("student_gender");
 				if (genderStr != null) {
-					studentprofile.setStudentGender(studentGender.valueOf(genderStr)); // If gender is stored as a
+					studentprofile.setStudentGender(StudentGender.valueOf(genderStr)); // If gender is stored as a
 																						// string
 				}
 			}
@@ -378,7 +379,7 @@ public class StudentDao {
 		try {
 		StudentProfile profile = null;
 
-		String query = "SELECT * FROM student_profiles WHERE profile_id = ?";
+		String query = "SELECT * FROM students_profile WHERE profile_id = ?";
 		preparedStatement = connection.prepareStatement(query);
 		preparedStatement.setInt(1, profileId);
 		resultSet = preparedStatement.executeQuery();
@@ -386,11 +387,11 @@ public class StudentDao {
 		if (resultSet.next()) {
 			// Safely parse gender string to match enum (e.g., "female" -> "Female")
 			String genderStr = resultSet.getString("student_gender");
-			studentGender gender = studentGender.Other; // default fallback
+			StudentGender gender = StudentGender.Other; // default fallback
 
 			try {
 				genderStr = genderStr.substring(0, 1).toUpperCase() + genderStr.substring(1).toLowerCase();
-				gender = studentGender.valueOf(genderStr);
+				gender = StudentGender.valueOf(genderStr);
 			} catch (Exception e) {
 				System.out.println("⚠️ Invalid gender format found in DB. Defaulting to 'Other'.");
 			}

@@ -27,7 +27,7 @@ public class DashboardDao {
         	        GROUP_CONCAT(DISTINCT sub.subject_name) AS subjects,
         	        GROUP_CONCAT(DISTINCT CONCAT(t.first_name, ' ', t.last_name)) AS teachers
         	    FROM students s
-        	    JOIN student_profiles sp ON s.student_id = sp.student_id
+        	    JOIN students_profile sp ON s.student_id = sp.student_id
         	    JOIN student_course sc ON s.student_id = sc.student_id
         	    JOIN courses c ON sc.course_id = c.course_id
         	    JOIN STUDENT_FEES sf ON s.student_id = sf.student_id

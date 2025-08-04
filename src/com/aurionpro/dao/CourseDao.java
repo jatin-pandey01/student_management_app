@@ -121,7 +121,6 @@ public class CourseDao {
 	public void addCourse(Course course) {
 		try {
 			statement = getStatement();
-			System.out.println(course.getCourseName() + " Line 105 :: ");
 			if(checkIfCourseExist(course.getCourseId())) {
 				System.out.println("Given course id : "+ course.getCourseId() + " exist into courses.");
 				return;
@@ -323,8 +322,6 @@ public class CourseDao {
 		}
 		
 		List<Subject> subjects = new ArrayList<>();
-		
-		System.out.println("Correct!!! Line 301 :: ");
 		
 		try {
 			statement = connection.createStatement();

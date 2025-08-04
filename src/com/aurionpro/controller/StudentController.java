@@ -1,19 +1,18 @@
 package com.aurionpro.controller;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 
 import com.aurionpro.model.Student;
 import com.aurionpro.model.StudentProfile;
-import com.aurionpro.model.StudentProfile.studentGender;
+import com.aurionpro.model.StudentProfile.StudentGender;
 import com.aurionpro.service.StudentService;
 
 public class StudentController {
 
 	private static final Scanner scanner = new Scanner(System.in);
 	private static final StudentService service = new StudentService();
-	 static studentGender gender;
+	private static StudentGender gender;
 
 	public static void menudrivenDisplay() {
 		while (true) {

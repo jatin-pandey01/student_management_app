@@ -7,11 +7,11 @@ public class StudentProfile {
 	private String studentAddress;
 	private int studentAge;
 	
-	public enum studentGender{
+	public enum StudentGender{
 		Female, Male, Other
-	};
+	}
 	
-	private studentGender studentGender;
+	private StudentGender studentGender;
 	
 	private String studentEmail;
 	
@@ -25,11 +25,11 @@ public class StudentProfile {
 	    return studentID;
 	}
 	
-	public void setStudentGender(studentGender studentGender) {
+	public void setStudentGender(StudentGender studentGender) {
 		this.studentGender = studentGender;
 	}
 	
-	public studentGender getStudentGender() {
+	public StudentGender getStudentGender() {
 	    return studentGender;
 	}
 
@@ -67,7 +67,7 @@ public class StudentProfile {
 	}
 
 	
-	public StudentProfile(int profileID, String studentAddress, int studentAge, String studentEmail, studentGender studentGender, int studentID) {
+	public StudentProfile(int profileID, String studentAddress, int studentAge, String studentEmail, StudentGender studentGender, int studentID) {
 		super();
 		this.profileID = profileID;
 		this.studentAddress = studentAddress;
