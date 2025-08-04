@@ -454,6 +454,7 @@ public class StudentDao {
 				System.out.println(" Course assignment failed.");
 			}
 		} catch (SQLException e) {
+			System.out.println("Error into Student Dao : 457");
 			e.printStackTrace();
 		}
 	}

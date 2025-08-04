@@ -24,14 +24,14 @@ public class StudentController {
 				System.out.println("2️.  Show All Students");
 				System.out.println("3️.  Show Alumni Students");
 				System.out.println("4️.  Update Student Details");
-				System.out.println("5. Update Student Profile Details");
+				System.out.println("5.  Update Student Profile Details");
 				System.out.println("6.  Delete Student");
 				System.out.println("7️.  Assign Course to A Student");
 				System.out.println("8️.  Show All Assigned Courses");
 				System.out.println("9️.  Show A Student Profile");
 				System.out.println("10. Show All Students Profiles");
 				System.out.println("11. Show All Alumni Students Profiles");
-				System.out.println("12.  Exit");
+				System.out.println("12. Exit");
 				System.out.print("👉 Enter your choice: ");
 
 				int choice = scanner.nextInt();

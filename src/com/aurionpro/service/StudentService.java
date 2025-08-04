@@ -1,22 +1,27 @@
 
 package com.aurionpro.service;
 
-import java.sql.SQLException;
-
 import java.util.List;
+import java.util.Scanner;
 
+import com.aurionpro.dao.CourseDao;
+import com.aurionpro.dao.FeeDao;
 import com.aurionpro.dao.StudentDao;
 import com.aurionpro.model.Student;
-import com.aurionpro.model.StudentProfile;
 import com.aurionpro.model.StudentGender;
+import com.aurionpro.model.StudentProfile;
 
 public class StudentService {
 
 	private StudentDao studentDao;
+	private CourseDao courseDao;
+	private Scanner scanner = new Scanner(System.in);
+	private FeeDao feeDao;
 
 	public StudentService() {
 		studentDao = new StudentDao();
-
+		courseDao = new CourseDao();
+		feeDao = new FeeDao();
 	}
 
 	// Add new student and profile
@@ -154,8 +159,41 @@ public class StudentService {
 	// Assign course to student
 	public void assignCourse(int studentId, int courseId) {
 		try {
+			if(!courseDao.checkIfCourseExist(courseId)) {
+				System.out.println("XXXXX Wrong course id XXXXX");
+				return;
+			}
+			
+			double courseFee = courseDao.getCourseFee(courseId);
+			while(courseFee == 0) {
+				System.out.println("XXX Wrong course id. XXX");
+				System.out.println("Enter courseId : ");
+				courseId = scanner.nextInt();
+				courseFee = courseDao.getCourseFee(courseId);
+			}
+			System.out.println("Course fee :: " + courseFee);
+			double paidFee;
+			double pendingFee;
+			while(true) {
+				System.out.println("Enter initial amount :: ");
+				paidFee = scanner.nextDouble();
+				pendingFee = courseFee-paidFee;
+				if(paidFee < 0) {
+					System.out.println("XXXX Invalid amount !!!! XXXX");
+					continue;
+				}
+				else if(pendingFee < 0) {
+					System.out.println("***** Amount must be less than courseFee *****");
+					continue;
+				}
+				else break;
+			}
+			
 			studentDao.assignCourseToStudent(studentId, courseId);
+			feeDao.addStudent(studentId, paidFee, pendingFee, courseFee);
+			
 		} catch (IllegalArgumentException e) {
+			System.out.println("Error : 190");
 			e.printStackTrace();
 		}
 

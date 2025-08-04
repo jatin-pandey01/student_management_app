@@ -362,5 +362,25 @@ public class CourseDao {
 			e.printStackTrace();
 		}
 	}
+	
+	public double getCourseFee(int course_id) {
+		try {
+			if(!checkIfCourseExist(course_id)) {
+				System.out.println("XXXXX Wrong course id !!!!! XXXXX");
+				return 0; 
+			}
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery("select course_fee from courses where course_id = " + course_id);
+			if(resultSet.next()) {
+				double courseFee =  resultSet.getDouble(1);
+				return courseFee;
+			}
+			return 0;
+		} catch (SQLException e) {
+			System.out.println("Error course Dao line : 377");
+			e.printStackTrace();
+		}
+		return 0;
+	}
 
 }

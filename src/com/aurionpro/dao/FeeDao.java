@@ -63,10 +63,13 @@ public class FeeDao {
 					+ " join students s on s.student_id = sf.student_id"
 					+ " where s.student_id = " + studentId
 					);
-			System.out.printf("\n\n%-10s | %-25s | %-10s | %-15s | %-10s\n","Student ID","Name","Paid fee","Pending fee","Total fee");
-			
-			while(resultSet.next()) {
+			if(resultSet.next()) {
+				System.out.printf("\n\n%-10s | %-25s | %-10s | %-15s | %-10s\n","Student ID","Name","Paid fee","Pending fee","Total fee");
+
 				System.out.printf("%-10s | %-25s | %-10s | %-15s | %-10s\n",resultSet.getInt(1), resultSet.getString(2), resultSet.getDouble(3), resultSet.getDouble(4),resultSet.getDouble(5));
+			}
+			else {
+				System.out.println("***XXX Given student is not enrolled in any course XXX***");
 			}
 			
 		} catch (SQLException e) {
@@ -166,6 +169,36 @@ public class FeeDao {
 			System.out.println("Total Earning : " + resultSet.getDouble(1));
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void addStudent(int studentId, double paidFee, double pendingFee, double totalFee) {
+		try {
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery("select * from student_fees where student_id = " + studentId);
+			if(resultSet.next()) {
+				double newPaidFee = paidFee + resultSet.getDouble(2);
+				double newPendingFee = pendingFee + resultSet.getDouble(3);
+				double newTotalFee = totalFee + resultSet.getDouble(4);
+				
+				preparedStatement = connection.prepareStatement("update student_fees set paid_fee = ?"
+						+ ", pending_fee = ?, total_fee = ?  where student_id = ?");
+				preparedStatement.setDouble(1, newPaidFee);
+				preparedStatement.setDouble(2, newPendingFee);
+				preparedStatement.setDouble(3, newTotalFee);
+				preparedStatement.setInt(4, studentId);
+				
+				preparedStatement.executeUpdate();
+			}
+			else {
+				preparedStatement = connection.prepareStatement("insert into student_fee values (?,?,?,?)");
+				preparedStatement.setInt(1, studentId);
+				preparedStatement.setDouble(2, paidFee);
+				preparedStatement.setDouble(3, pendingFee);
+				preparedStatement.setDouble(4, totalFee);
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
