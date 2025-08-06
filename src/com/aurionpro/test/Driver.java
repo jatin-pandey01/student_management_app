@@ -14,11 +14,11 @@ import com.aurionpro.model.Dashboard;
 import com.aurionpro.service.DashboardService;
 
 public class Driver {
-	public static void main(String[] args) {
+	public void main() {
 		Scanner scanner = new Scanner(System.in);
 		int choice;
 		try {
-			// Launch the Student Management App
+//			 Launch the Student Management App
 			while (true) {
 				System.out.println("1. Student Management");
 				System.out.println("2. Teacher Management");
@@ -48,9 +48,9 @@ public class Driver {
 
 					List<Dashboard> dashboardData = service.getDashboardData();
 					view.displayDashboard(dashboardData);
-					break;		
+					break;
 				default:
-					System.out.println("Enter correct!");
+					System.out.println("Invalid choice, please enter correct choic.");
 					
 				}
 			}
@@ -63,8 +63,4 @@ public class Driver {
 			scanner.close();
 		}
 	}
-
 }
-
-
-
