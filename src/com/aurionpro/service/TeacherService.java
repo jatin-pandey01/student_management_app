@@ -245,5 +245,24 @@ public class TeacherService {
         }
         return success;
     }
+	
+	public void searchTeacher(String firstName, String lastName) {
+	    if (firstName == null || firstName.trim().isEmpty() || firstName.matches("\\d+")) {
+	        System.out.println("Invalid first name.");
+	        return;
+	    }
+
+	    if (lastName == null || lastName.trim().isEmpty() || lastName.matches("\\d+")) {
+	        System.out.println("Inavaid last name.");
+	        return;
+	    }
+
+	    if (!teacherDao.isTeacherPresent(firstName, lastName)) {
+	        System.out.println("Teacher with name " + firstName + " " + lastName + " does not exist.");
+	        return;
+	    }
+
+	    teacherDao.searchATeacher(firstName, lastName);
+	}
 
 }

@@ -77,18 +77,41 @@ public class CourseDao {
 		return check;
 	}
 	
-	public List<Course> showAllCourses() {
+	public List<Course> showAllActiveCourses() {
 		List<Course> courses = new ArrayList<>();
-		try {
+		try {	
 			statement = connection.createStatement();
-			resultSet = statement.executeQuery("select * from courses");
+			resultSet = statement.executeQuery("select course_id, course_name, course_fee, academic_year"
+					+ ", duration, description from courses where is_active = true");
 			
-			System.out.printf("%-10s %-50s %-10s %-10s\n","Course ID","Course Name","Course Fee","Active");
-			System.out.println("--------------------------------------------------------------------------------------------");
-			while(resultSet.next()) {
-				System.out.printf("%-10s %-50s %-10s %b\n",resultSet.getInt("course_id"),
-						resultSet.getString("course_name"),resultSet.getDouble("course_fee"),resultSet.getBoolean("is_active"));
-				courses.add(new Course(resultSet.getInt(1), resultSet.getString(2), resultSet.getDouble(3)));
+			if(resultSet.next()) {
+				System.out.printf("|%-10s | %-50s | %-10s | %-25s | %-10s | %-60s|\n","Course ID","Course Name","Course Fee","Year of Establishment",
+						"Duration","Description");
+				System.out.println("|-----------+----------------------------------------------------+------------+---------------------------+"
+						+ "------------+-------------------------------------------------------------|");
+				System.out.printf("|%-10s | %-50s | %-10s | %-25s | %-10s | %-60s|\n",resultSet.getInt("course_id"),
+						resultSet.getString("course_name"),resultSet.getDouble("course_fee"),resultSet.getString("academic_year"),
+						resultSet.getString("duration"),resultSet.getString("description"));
+				courses.add(new Course(resultSet.getInt(1), 
+						resultSet.getString(2), 
+						resultSet.getDouble(3), 
+						resultSet.getString(4),
+						resultSet.getString(5),
+						resultSet.getString(6)));
+				while(resultSet.next()) {
+					System.out.printf("|%-10s | %-50s | %-10s | %-25s | %-10s | %-60s|\n",resultSet.getInt("course_id"),
+							resultSet.getString("course_name"),resultSet.getDouble("course_fee"),resultSet.getString("academic_year"),
+							resultSet.getString("duration"),resultSet.getString("description"));
+					courses.add(new Course(resultSet.getInt(1), 
+							resultSet.getString(2), 
+							resultSet.getDouble(3), 
+							resultSet.getString(4),
+							resultSet.getString(5),
+							resultSet.getString(6)));
+				}
+			}
+			else {
+				System.out.println("No course active.");
 			}
 			
 		} catch (SQLException e) {
@@ -98,19 +121,84 @@ public class CourseDao {
 		return courses;
 	}
 	
-	public void showAllSubjects() {
+	public List<Course> showAllInactiveCourses() {
+		List<Course> courses = new ArrayList<>();
+		try {	
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery("select * from courses where is_active = false");
+			
+			if(resultSet.next()) {
+				System.out.printf("|%-10s | %-50s | %-10s | %-25s | %-10s | %-60s|\n","Course ID","Course Name","Course Fee","Year of Establishment","Duration","Description");
+				System.out.println("|-----------+----------------------------------------------------+------------+---------------------------+"
+						+ "------------+-------------------------------------------------------------|");
+				System.out.printf("|%-10s | %-50s | %-10s | %-25s | %-10s | %-60s|\n",resultSet.getInt("course_id"),
+						resultSet.getString("course_name"),resultSet.getDouble("course_fee"),resultSet.getString("academic_year"),
+						resultSet.getString("duration"),resultSet.getString("description"));
+				courses.add(new Course(resultSet.getInt(1), 
+						resultSet.getString(2), 
+						resultSet.getDouble(3), 
+						resultSet.getString(4),
+						resultSet.getString(5),
+						resultSet.getString(6)));
+				while(resultSet.next()) {
+					System.out.printf("|%-10s | %-50s | %-10s | %-25s | %-10s | %-60s|\n",resultSet.getInt("course_id"),
+							resultSet.getString("course_name"),resultSet.getDouble("course_fee"),resultSet.getString("academic_year"),
+							resultSet.getString("duration"),resultSet.getString("description"));
+					courses.add(new Course(resultSet.getInt(1), 
+							resultSet.getString(2), 
+							resultSet.getDouble(3), 
+							resultSet.getString(4),
+							resultSet.getString(5),
+							resultSet.getString(6)));
+				}
+			}
+			else {
+				System.out.println("No course inactive.");
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println(e.getLocalizedMessage());
+		}
+		return courses;
+	}
+	
+	public void showAllActiveSubjects() {
 		try {
 			statement = connection.createStatement();
-			resultSet = statement.executeQuery("select * from subjects");
+			resultSet = statement.executeQuery("select * from subjects where is_active = true");
 			if(!resultSet.next()) {
 				System.out.println("No subjects exist!!!");
 				return;
 			}
-			System.out.printf("%-10s %-30s %-10s\n","Subject ID","Subject Name","Active");
-			System.out.printf("%-10s %-30s %b\n",resultSet.getInt(1),resultSet.getString(2),resultSet.getBoolean(3));
+			System.out.printf("|%-10s | %-30s|\n","Subject ID","Subject Name");
+			System.out.println("|-----------+-------------------------------|");
+			System.out.printf("|%-10s | %-30s|\n",resultSet.getInt(1),resultSet.getString(2));
 			
 			while(resultSet.next()) {
-				System.out.printf("%-10s %-30s %b\n",resultSet.getInt(1),resultSet.getString(2),resultSet.getBoolean(3));
+				System.out.printf("|%-10s | %-30s|\n",resultSet.getInt(1),resultSet.getString(2));
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void showAllInactiveSubjects() {
+		try {
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery("select * from subjects where is_active = false");
+			if(!resultSet.next()) {
+				System.out.println("No subjects exist!!!");
+				return;
+			}
+			System.out.printf("|%-10s | %-30s|\n","Subject ID","Subject Name");
+			System.out.println("|-----------+-------------------------------|");
+			System.out.printf("|%-10s | %-30s|\n",resultSet.getInt(1),resultSet.getString(2),resultSet.getBoolean(3));
+			
+			while(resultSet.next()) {
+				System.out.printf("|%-10s | %-30s|\n",resultSet.getInt(1),resultSet.getString(2),resultSet.getBoolean(3));
+				
 			}
 			
 		} catch (SQLException e) {
@@ -130,11 +218,14 @@ public class CourseDao {
 				return;
 			}
 			
-			preparedStatement = connection.prepareStatement("insert into courses values (?,?,?,?)");
+			preparedStatement = connection.prepareStatement("insert into courses values (?,?,?,?,?,?,?)");
 			preparedStatement.setInt(1, course.getCourseId());
 			preparedStatement.setString(2, course.getCourseName());
 			preparedStatement.setBoolean(3, true);
 			preparedStatement.setDouble(4, course.getCourseFee());
+			preparedStatement.setString(5, course.getAcademicYear());
+			preparedStatement.setString(6, course.getDuration());
+			preparedStatement.setString(7, course.getDescription());
 			int updates = preparedStatement.executeUpdate();
 			System.out.println("✔ New course added successfully.");
 		} catch (SQLException e) {
@@ -271,6 +362,29 @@ public class CourseDao {
 			int updates = preparedStatement.executeUpdate();
 
 			preparedStatement = connection.prepareStatement("update course_subject set is_active = false where course_id = " + courseId);
+			
+			updates = preparedStatement.executeUpdate();
+			
+			System.out.println("Deletion successful.");
+		
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void deleteSubject(int subjectId) {
+		try {
+			if(!checkIfSubjectExist(subjectId)) {
+				System.out.println("Sorry, given subject id does not exist.");
+				return;
+			}
+			
+			preparedStatement = connection.prepareStatement("update subjects set is_active = false where subject_id = " + subjectId);
+			
+			int updates = preparedStatement.executeUpdate();
+
+			preparedStatement = connection.prepareStatement("update course_subject set is_active = false where subject_id = " + subjectId);
 			
 			updates = preparedStatement.executeUpdate();
 			

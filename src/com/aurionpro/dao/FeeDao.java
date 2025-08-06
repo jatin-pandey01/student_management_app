@@ -192,11 +192,13 @@ public class FeeDao {
 				preparedStatement.executeUpdate();
 			}
 			else {
-				preparedStatement = connection.prepareStatement("insert into student_fee values (?,?,?,?)");
+				preparedStatement = connection.prepareStatement("insert into student_fees values (?,?,?,?)");
 				preparedStatement.setInt(1, studentId);
 				preparedStatement.setDouble(2, paidFee);
 				preparedStatement.setDouble(3, pendingFee);
 				preparedStatement.setDouble(4, totalFee);
+				
+				preparedStatement.executeUpdate();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

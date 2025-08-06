@@ -1,5 +1,3 @@
-
-
 package com.aurionpro.controller;
 
 import java.util.InputMismatchException;
@@ -13,16 +11,9 @@ import com.aurionpro.service.TeacherService;
 
 public class TeacherController {
 	
-	private static Scanner scanner = new Scanner(System.in);
-	private static TeacherService service = new TeacherService();
-	private static TeacherDao tm = TeacherDao.getInstance();
-	
-	// public static void main(String[] args) {
-	// 	Database db = Database.getInstance();
-	// 	db.getConnection();
-	// 	TeacherController controller = new TeacherController();
-	// 	controller.menu();
-	// }
+	static Scanner scanner = new Scanner(System.in);
+	static TeacherService service = new TeacherService();
+	TeacherDao tm = TeacherDao.getInstance();
 	
 	public static void menu() {
 		while (true) {
@@ -31,11 +22,13 @@ public class TeacherController {
 			System.out.println("2. Add New Teacher");
 			System.out.println("3. Assign Subject");
 			System.out.println("4. Remove a subject");
-			System.out.println("5. Search Teacher");
-			System.out.println("6. Delete Teacher");
-			System.out.println("7. Activate Teacher");
-			System.out.println("8. View Teacher Profile");
-			System.out.println("0. Go back");
+			System.out.println("5. Search Teacher by Id");
+			System.out.println("6. Search Teacher by Name");
+			System.out.println("7. Delete Teacher");
+			System.out.println("8. Activate Teacher");
+			System.out.println("9. View Teacher Profile");
+			System.out.println("10. Go back");
+			System.out.println("=========================================");
 			System.out.print("Enter your choice: ");
 			int choice;
 			try {
@@ -46,12 +39,10 @@ public class TeacherController {
 				scanner.nextLine();
 				continue;
 			}
-			
-			if(choice == 0) {
-				System.out.println("***** Teacher Exit *****");
+			if(choice == 10) {
+				System.out.println("Teacher Service Exiting!!");
 				break;
 			}
-			
 			switch (choice) {
 			case 1:
 				handleShowAllTeachers();
@@ -95,7 +86,7 @@ public class TeacherController {
 					service.addTeacher(teacher, teacherProfile);
 					
 				} catch (InputMismatchException e) {
-					System.out.println("Please enter valid data types.");
+					System.out.println("Please enter valid data.");
 					scanner.nextLine(); 
 				}
 				break;
@@ -144,6 +135,19 @@ public class TeacherController {
 
 			case 6:
 				try {
+					System.out.println("Enter first name: ");
+					String fname = scanner.nextLine().trim();
+					System.out.println("Enter last name: ");
+					String lname = scanner.nextLine().trim();
+					service.searchTeacher(fname, lname);
+				}catch(InputMismatchException e) {
+					System.out.println("Please enter a valid data.");
+					scanner.nextLine();
+				}
+				break;
+				
+			case 7:
+				try {
 					System.out.print("Enter Teacher ID to delete: ");
 					int deleteId = scanner.nextInt();
 					service.deleteTeacher(deleteId);
@@ -153,7 +157,7 @@ public class TeacherController {
 				}
 				break;
 
-			case 7:
+			case 8:
 			    try {
 			        System.out.print("Enter Teacher ID to activate: ");
 			        int teacherId = scanner.nextInt();
@@ -170,7 +174,7 @@ public class TeacherController {
 			    }
 			    break;
 
-			case 8:
+			case 9:
 				handleShowAllTeacherProfiles();
 				break;
 
@@ -235,4 +239,3 @@ public class TeacherController {
 
 	
 }
-

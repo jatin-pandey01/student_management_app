@@ -224,24 +224,63 @@ public class StudentDao {
 
 	}
 
-	public void readAStudent(int studentID) {
+	public Student readAStudent(int studentID) {
+		
 		try {
-			preparedStatement = connection.prepareStatement("SELECT * FROM students WHERE student_id = ?");
+			  System.out.println("Querying student with ID: " + studentID); // Debug
 
-			preparedStatement.setInt(1, studentID);
-			ResultSet rs = preparedStatement.executeQuery();
+		        preparedStatement = connection.prepareStatement("SELECT * FROM students WHERE student_id = ?");
+		        preparedStatement.setInt(1, studentID);
+		        ResultSet rs = preparedStatement.executeQuery();
 
-			if (rs.next()) {
-				Student student = new Student(rs.getInt("student_id"), rs.getInt("student_rollno"),
-						rs.getString("student_fname"), rs.getString("student_lname"), rs.getString("student_mobno"),
-						rs.getBoolean("is_Active"));
-//			System.out.println(student);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		        if (rs.next()) {
+		            
+		            return new Student(
+		                rs.getInt("student_id"),
+		                rs.getInt("student_rollno"),
+		                rs.getString("student_fname"),
+		                rs.getString("student_lname"),
+		                rs.getString("student_mobno"),
+		                rs.getBoolean("is_Active")
+		            );
+		        } 
+		        
 
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		    }
+
+		    return null;
+
+}
+
+public Student getStudentByName(String studentFname, String studentLname) {
+	try {
+		 preparedStatement = connection.prepareStatement(
+		            "SELECT * FROM students WHERE student_fname = ? AND student_lname = ?"
+		        );
+		        preparedStatement.setString(1, studentFname);
+		        preparedStatement.setString(2, studentLname);
+
+		        ResultSet rs = preparedStatement.executeQuery();
+
+		        if (rs.next()) {
+		            return new Student(
+		                rs.getInt("student_id"),
+		                rs.getInt("student_rollno"),
+		                rs.getString("student_fname"),
+		                rs.getString("student_lname"),
+		                rs.getString("student_mobno"),
+		                rs.getBoolean("is_Active"));
+		             
+		        }
+		        
+	} catch (SQLException e) {
+		e.printStackTrace();
 	}
+	
+	return null;
+}
 
 	public void updateAStudentRollno(Student student) {
 		try {

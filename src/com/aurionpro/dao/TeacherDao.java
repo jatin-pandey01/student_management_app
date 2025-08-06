@@ -273,5 +273,52 @@ public class TeacherDao {
 
 	    return profiles;
 	}
+	
+	public boolean isTeacherPresent(String firstName, String lastName) {
+		try {
+			PreparedStatement preparedStatement = connection.prepareStatement("SELECT 1 FROM teachers WHERE first_name = ? and last_name = ? and is_active = true");
+			preparedStatement.setString(1, firstName);
+			preparedStatement.setString(2, lastName);
+			resultSet = preparedStatement.executeQuery();
+			return resultSet.next();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public void searchATeacher(String firstName, String lastName) {
+	    try {
+	        preparedStatement = connection.prepareStatement("SELECT * FROM teachers WHERE first_name = ? and last_name= ? and is_active = true");
+	        preparedStatement.setString(1, firstName);
+	        preparedStatement.setString(2, lastName);
+	        resultSet = preparedStatement.executeQuery();
+	        String format = "| %-5s | %-15s | %-15s | %-15s | %-25s |%n";
+	        String line = "+-------+-----------------+-----------------+-----------------+---------------------------+";
+
+	        if (!resultSet.isBeforeFirst()) {
+	            System.out.println("No teacher found with name: " + firstName + lastName);
+	            return;
+	        }
+
+	        System.out.println(line);
+	        System.out.printf(format, "ID", "First Name", "Last Name", "Mobile", "Email");
+	        System.out.println(line);
+
+	        while (resultSet.next()) {
+	            System.out.printf(format,
+	                    resultSet.getInt("teacher_id"),
+	                    resultSet.getString("first_name"),
+	                    resultSet.getString("last_name"),
+	                    resultSet.getString("mobile_number"),
+	                    resultSet.getString("email_id"));
+	        }
+
+	        System.out.println(line);
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
 
 }

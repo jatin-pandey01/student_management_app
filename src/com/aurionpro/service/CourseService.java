@@ -11,12 +11,20 @@ public class CourseService {
 		this.courseDao = new CourseDao();
 	}
 	
-	public void showAllCourses() {
-		courseDao.showAllCourses();
+	public void showAllActiveCourses() {
+		courseDao.showAllActiveCourses();
 	}
 	
-	public void showAllSubjects() {
-		courseDao.showAllSubjects();
+	public void showAllInactiveCourses() {
+		courseDao.showAllInactiveCourses();
+	}
+	
+	public void showAllActiveSubjects() {
+		courseDao.showAllActiveSubjects();
+	}
+	
+	public void showAllInactiveSubjects() {
+		courseDao.showAllInactiveSubjects();
 	}
 	
 	public void addCourse(Course course) {
@@ -45,6 +53,10 @@ public class CourseService {
 	
 	public void deleteCourse(int courseId) {
 		courseDao.deleteCourse(courseId);
+	}
+	
+	public void deleteSubject(int subjectId) {
+		courseDao.deleteSubject(subjectId);
 	}
 	
 }

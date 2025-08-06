@@ -230,13 +230,19 @@ public class StudentService {
 	}
 
 	// Show a single student
-	public void getStudentById(int studentId) {
+	public Student getStudentById(int studentId) {
 		try {
-			studentDao.readAStudent(studentId);
+			return studentDao.readAStudent(studentId);
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		}
+		return null;
 
+	}
+		
+	// Show a single student
+	public Student getStudentWithName(String studentFname, String studentLname) {			
+		return studentDao.getStudentByName(studentFname, studentLname);
 	}
 
 	// Show a student's profile
@@ -315,5 +321,6 @@ public class StudentService {
 		return null;
 
 	}
-
+	
+	
 }
