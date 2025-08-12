@@ -41,6 +41,29 @@ public class CourseDao {
 		return check;
 	}
 	
+	public void courseExist(int courseId) {
+		try {
+			if(!checkIfCourseExist(courseId)) {
+				System.out.println("\\nSorry, no course exist with given id.");
+				return;
+			}
+			statement = getStatement();
+			resultSet = statement.executeQuery("select * from courses where course_id = " + courseId);
+			System.out.printf("|%-10s | %-50s | %-13s | %-10s | %-25s | %-10s | %-60s|\n",
+					"Course ID","Course Name", "Status", "Course Fee","Year of Establishment",
+					"Duration","Description");
+			resultSet.next();
+			String status = resultSet.getBoolean("is_active") ? "Active" : "Not Active";
+			System.out.printf("|%-10s | %-50s | %-13s | %-10s | %-25s | %-10s | %-60s|\n",
+					resultSet.getInt("course_id"), resultSet.getString("course_name"), status,
+					resultSet.getDouble("course_fee"),resultSet.getString("academic_year"),
+					resultSet.getString("duration"),resultSet.getString("description"));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public boolean checkIfCourseExist(String courseName) {
 		boolean check = false;
 		try {
@@ -51,6 +74,29 @@ public class CourseDao {
 			e.printStackTrace();
 		}
 		return check;
+	}
+	
+	public void courseExist(String courseName) {
+		try {
+			if(!checkIfCourseExist(courseName)) {
+				System.out.println("\\nSorry, no course exist with given id.");
+				return;
+			}
+			statement = getStatement();
+			resultSet = statement.executeQuery("select * from courses where course_name = '" + courseName + "'");
+			System.out.printf("|%-10s | %-50s | %-13s | %-10s | %-25s | %-10s | %-60s|\n",
+					"Course ID","Course Name", "Status", "Course Fee","Year of Establishment",
+					"Duration","Description");
+			resultSet.next();
+			String status = resultSet.getBoolean("is_active") ? "Not active" : "Active";
+			System.out.printf("|%-10s | %-50s | %-13s | %-10s | %-25s | %-10s | %-60s|\n",
+					resultSet.getInt("course_id"), resultSet.getString("course_name"), status,
+					resultSet.getDouble("course_fee"),resultSet.getString("academic_year"),
+					resultSet.getString("duration"),resultSet.getString("description"));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public boolean checkIfSubjectExist(int subjectId) {
@@ -445,7 +491,7 @@ public class CourseDao {
 					+ " on s.subject_id = c.subject_id and c.course_id = " + courseId);
 			
 			if(!resultSet.next()) {
-				System.out.println("Zero subjects into the course.");
+				System.out.println("No subjects into the course.");
 				return;
 			}
 			

@@ -11,6 +11,7 @@ import java.util.List;
 import com.aurionpro.database.Database;
 import com.aurionpro.model.Teacher;
 import com.aurionpro.model.TeacherProfile;
+import com.aurionpro.model.TeacherSubjectCourse;
 
 public class TeacherDao {
 	private Connection connection;
@@ -319,6 +320,57 @@ public class TeacherDao {
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
+	}
+	
+	public List<Teacher> viewDeactivateTeacher(){
+		List<Teacher> teachers = new ArrayList<>();
+		try {
+			preparedStatement = connection.prepareStatement("select * from teachers where is_active = false");
+			resultSet = preparedStatement.executeQuery();
+			while(resultSet.next()) {
+				int id = resultSet.getInt("teacher_id");
+				String fname = resultSet.getString("first_name");
+				String lname = resultSet.getString("last_name");
+				String mobileNo = resultSet.getString("mobile_number");
+				String email = resultSet.getString("email_id");
+				boolean isActive = resultSet.getBoolean("is_active");
+				Teacher teacher = new Teacher(id,fname, lname, mobileNo, email, isActive);
+				teachers.add(teacher);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return teachers;
+	}
+	
+	public List<TeacherSubjectCourse> getTeacherSubjectCourseDetails() {
+		List<TeacherSubjectCourse> list = new ArrayList<>();
+		String sql = "SELECT t.teacher_id, t.first_name, t.last_name, s.subject_name, c.course_name "
+				   + "FROM subject_teacher st "
+				   + "JOIN teachers t ON st.teacher_id = t.teacher_id "
+				   + "JOIN course_subject cs ON st.course_subject_id = cs.course_subject_id "
+				   + "JOIN subjects s ON cs.subject_id = s.subject_id "
+				   + "JOIN courses c ON cs.course_id = c.course_id "
+				   + "WHERE st.is_Active = true";
+
+		try {
+			preparedStatement = connection.prepareStatement(sql);
+			resultSet = preparedStatement.executeQuery();
+
+			while (resultSet.next()) {
+				int teacherId = resultSet.getInt("teacher_id");
+				String firstName = resultSet.getString("first_name");
+				String lastName = resultSet.getString("last_name");
+				String subjectName = resultSet.getString("subject_name");
+				String courseName = resultSet.getString("course_name");
+
+				list.add(new TeacherSubjectCourse(teacherId, firstName, lastName, subjectName, courseName));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 
 }

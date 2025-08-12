@@ -41,7 +41,10 @@ public class CourseController {
 				
 				int userInput = scanner.nextInt();
 				
-				if(userInput == 13) break;
+				if(userInput == 13) {
+					System.out.println("\n Chalo, Milte hai baad me......... Bye!\n");
+					break;
+				}
 				
 				switch(userInput) {
 					case 1 : courseService.showAllActiveCourses();
@@ -87,21 +90,11 @@ public class CourseController {
 							break;
 					case 9 : System.out.println("\n\nEnter course id : ");
 							courseId = scanner.nextInt();
-							if(courseService.checkIfCourseExist(courseId)) {
-								System.out.println("\nCongrats !!!!! It exist.");
-							}
-							else {
-								System.out.println("\nSorry, no course exist with given id.");
-							}
+							courseService.checkIfCourseExist(courseId);
 							break;
 					case 10 : System.out.println("\n\nEnter course name : ");
 							courseName = reader.readLine();
-							if(courseService.checkIfCourseExist(courseName)) {
-								System.out.println("\nCongrats !!!!! It exist.");
-							}
-							else {
-								System.out.println("\nSorry, no course exist with given name.");
-							}
+							courseService.checkIfCourseExist(courseName);
 							break;
 					case 11 : System.out.println("\n\nEnter course id : ");
 							courseId = scanner.nextInt();

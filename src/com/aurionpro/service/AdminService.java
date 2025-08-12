@@ -16,7 +16,7 @@ public class AdminService {
 		}
 		
 		if(!adminDao.checkUserExist(emailId, password)) {
-			System.out.println("User not exist !!!!!!");
+			System.out.println("Invalid Credentials !!!!!!");
 			return false;
 		}
 		

@@ -39,7 +39,29 @@ public class FeesController {
 						break;
 				case 3: System.out.println("Enter student id : ");
 						int studentId = scanner.nextInt();
-						feeService.feeByStudentId(studentId);
+						double pendingFee = feeService.feeByStudentId(studentId);
+						if(pendingFee > 0) {
+							System.out.println("would you like to pay some amount ? \n1. Yes\n2. No\n");
+							while(true) {
+								System.out.println("Enter you choice : ");
+								int choice = scanner.nextInt();
+								if(choice == 1) {
+									System.out.println("Enter amount : ");
+									double amount = scanner.nextDouble();
+									if(amount < 0) {
+										System.out.println("Invalid amount !!!!");
+										break;
+									}
+									if(amount > pendingFee) {
+										amount = pendingFee;
+									}
+									
+									feeService.addFeeForStudent(amount, studentId);
+									break;
+								}
+								if(choice == 2) break;
+							}
+ 						}
 						break;
 				case 4: System.out.println("Enter course id : ");
 						int courseId = scanner.nextInt();

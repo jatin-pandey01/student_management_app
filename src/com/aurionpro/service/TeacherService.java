@@ -5,6 +5,7 @@ import java.util.List;
 import com.aurionpro.dao.TeacherDao;
 import com.aurionpro.model.Teacher;
 import com.aurionpro.model.TeacherProfile;
+import com.aurionpro.model.TeacherSubjectCourse;
 
 public class TeacherService {
 	private TeacherDao teacherDao;
@@ -263,6 +264,14 @@ public class TeacherService {
 	    }
 
 	    teacherDao.searchATeacher(firstName, lastName);
+	}
+	
+	public List<Teacher> fetchAllDeactivatedTeacher(){
+		return teacherDao.viewDeactivateTeacher();
+	}
+	
+	public List<TeacherSubjectCourse> fetchTeacherSubjectCourseDetails() {
+		return teacherDao.getTeacherSubjectCourseDetails();
 	}
 
 }

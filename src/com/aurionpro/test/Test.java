@@ -8,9 +8,11 @@ public class Test {
 		AdminController adminController = AdminController.getObject();
 		Driver driver = new Driver();
 		
-		if(adminController.login()) {
-			driver.main();
+		while(!adminController.login()) {
+			System.out.println("\nPlease try again :) ");
 		}
+		
+		driver.main();
 		
 	}
 

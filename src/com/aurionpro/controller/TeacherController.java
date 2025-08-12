@@ -7,6 +7,7 @@ import com.aurionpro.dao.TeacherDao;
 import com.aurionpro.database.Database;
 import com.aurionpro.model.Teacher;
 import com.aurionpro.model.TeacherProfile;
+import com.aurionpro.model.TeacherSubjectCourse;
 import com.aurionpro.service.TeacherService;
 
 public class TeacherController {
@@ -26,8 +27,10 @@ public class TeacherController {
 			System.out.println("6. Search Teacher by Name");
 			System.out.println("7. Delete Teacher");
 			System.out.println("8. Activate Teacher");
-			System.out.println("9. View Teacher Profile");
-			System.out.println("10. Go back");
+			System.out.println("9. View Deactivated Teacher");
+			System.out.println("10. View Teacher Profile");
+			System.out.println("11. View Course & Subjects Assigned to Teacher.");
+			System.out.println("12. Go back");
 			System.out.println("=========================================");
 			System.out.print("Enter your choice: ");
 			int choice;
@@ -39,7 +42,7 @@ public class TeacherController {
 				scanner.nextLine();
 				continue;
 			}
-			if(choice == 10) {
+			if(choice == 12) {
 				System.out.println("Teacher Service Exiting!!");
 				break;
 			}
@@ -172,11 +175,57 @@ public class TeacherController {
 			        System.out.println("Please enter a numeric Teacher ID.");
 			        scanner.nextLine(); 
 			    }
-			    break;
+			    break; 
 
 			case 9:
+			    List<Teacher> deactivatedTeachers = service.fetchAllDeactivatedTeacher();
+
+			    if (deactivatedTeachers.isEmpty()) {
+			        System.out.println("No deactivated teachers found.");
+			    } else {
+			        String format = "| %-5s | %-15s | %-15s | %-15s | %-25s |%n";
+			        String line = "+-------+-----------------+-----------------+-----------------+---------------------------+";
+
+			        System.out.println(line);
+			        System.out.printf(format, "ID", "First Name", "Last Name", "Mobile", "Email");
+			        System.out.println(line);
+
+			        for (Teacher t : deactivatedTeachers) {
+			            System.out.printf(format, t.getTeacherId(), t.getFirstName(), t.getLastName(), t.getMobileNo(), t.getEmailId());
+			        }
+
+			        System.out.println(line);
+			    }
+			    break;
+
+				
+			case 10:
 				handleShowAllTeacherProfiles();
 				break;
+				
+			case 11:
+				List<TeacherSubjectCourse> list = service.fetchTeacherSubjectCourseDetails();
+				if (list.isEmpty()) {
+					System.out.println("No active teacher-subject-course assignments found.");
+				} else {
+					String format = "| %-5s | %-15s | %-15s | %-25s | %-45s |%n";
+					String line = "+-------+-----------------+-----------------+----------------------+-----------------------------------------------+";
+					System.out.println(line);
+					System.out.printf(format, "ID", "First Name", "Last Name", "Subject Name", "Course Name");
+					System.out.println(line);
+					for (TeacherSubjectCourse info : list) {
+						System.out.printf(format,
+							info.getTeacherId(),
+							info.getFirstName(),
+							info.getLastName(),
+							info.getSubjectName(),
+							info.getCourseName()
+						);
+					}
+					System.out.println(line);
+				}
+				break;
+
 
 			default:
 				System.out.println("Invalid choice.");

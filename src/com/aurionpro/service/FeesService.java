@@ -17,8 +17,8 @@ public class FeesService {
 		feeDao.pendingFees();
 	}
 	
-	public void feeByStudentId(int studentId) {
-		feeDao.feeByStudentId(studentId);
+	public double feeByStudentId(int studentId) {
+		return feeDao.feeByStudentId(studentId);
 	}
 	
 	public void feeByCourseId(int courseId) {
@@ -33,5 +33,7 @@ public class FeesService {
 		feeDao.totalEarning();
 	}
 	
-	
+	public void addFeeForStudent(double amount, int studentId) {
+		feeDao.addFeeForStudent(amount, studentId);
+	}
 }

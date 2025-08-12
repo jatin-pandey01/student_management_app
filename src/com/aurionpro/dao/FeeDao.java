@@ -49,10 +49,10 @@ public class FeeDao {
 		return check;
 	}
 	
-	public void feeByStudentId(int studentId) {
+	public double feeByStudentId(int studentId) {
 		if(!checkIfStudentExist(studentId)) {
 			System.out.println("XXXXX Wrong student id. XXXXX");
-			return;
+			return 0;
 		}
 		
 		try {
@@ -67,6 +67,7 @@ public class FeeDao {
 				System.out.printf("\n\n%-10s | %-25s | %-10s | %-15s | %-10s\n","Student ID","Name","Paid fee","Pending fee","Total fee");
 
 				System.out.printf("%-10s | %-25s | %-10s | %-15s | %-10s\n",resultSet.getInt(1), resultSet.getString(2), resultSet.getDouble(3), resultSet.getDouble(4),resultSet.getDouble(5));
+				return resultSet.getDouble(4);
 			}
 			else {
 				System.out.println("***XXX Given student is not enrolled in any course XXX***");
@@ -76,7 +77,7 @@ public class FeeDao {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		return 0;
 	}
 	
 	public void feeByCourseId(int courseId) {
@@ -201,6 +202,38 @@ public class FeeDao {
 				preparedStatement.executeUpdate();
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void addFeeForStudent(double amount, int studentId) {
+		try {
+			statement = getStatement();
+			resultSet = statement.executeQuery("select paid_fee, pending_fee,total_fee from student_fees where student_id = " + studentId);
+			resultSet.next();
+			
+			double paidFee = resultSet.getDouble(1) + amount;
+			double pendingFee = resultSet.getDouble(2) - amount;
+			
+			preparedStatement = connection.prepareStatement("update student_fees set paid_fee = ?, pending_fee = ? where student_id = ?");
+			preparedStatement.setDouble(1, paidFee);
+			preparedStatement.setDouble(2, pendingFee);
+			preparedStatement.setInt(3, studentId);
+			
+			preparedStatement.execute();
+			
+			resultSet = statement.executeQuery(
+					"select sf.student_id, CONCAT(student_fname,' ',student_lname) as Name, "
+					+ " sf.paid_fee, sf.pending_fee, sf.total_fee from student_fees sf "
+					+ " join students s on s.student_id = sf.student_id"
+					+ " where s.student_id = " + studentId
+					);
+			resultSet.next();
+			System.out.printf("\n\n%-10s | %-25s | %-10s | %-15s | %-10s\n","Student ID","Name","Paid fee","Pending fee","Total fee");
+
+			System.out.printf("%-10s | %-25s | %-10s | %-15s | %-10s\n",resultSet.getInt(1), resultSet.getString(2), resultSet.getDouble(3), resultSet.getDouble(4),resultSet.getDouble(5));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
